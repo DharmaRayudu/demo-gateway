@@ -1,0 +1,72 @@
+server:
+  port: 9090  # Your gateway port
+
+
+spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          keycloak:
+            client-id: oauth2-connect
+            client-secret: RyDc7TGkZtLi4nBa2Ys1WxW80DyAHhK6
+            authorization-grant-type: authorization_code
+            redirect-uri: "{baseUrl}/login/oauth2/code/keycloak"
+            scope: openid, profile, email
+        provider:
+          keycloak:
+            issuer-uri: http://localhost:8080/realms/oauth-gateway
+            user-name-attribute: preferred_username
+  cloud:
+    gateway:
+      server:
+        webmvc:
+          routes:
+            - id: demo-customer
+              uri: http://localhost:9091
+              predicates:
+                - Path=/api/customrs/**
+              filters:
+                - TokenRelay
+          #spring:
+          #  security:
+          #    oauth2:
+          #      client:
+          #        registration:
+          #          keycloak:  # Registration ID
+          #            client-id: oauth2-connect  # From Keycloak
+          #            client-secret: RyDc7TGkZtLi4nBa2Ys1WxW80DyAHhK6  # From Keycloak
+          #            authorization-grant-type: authorization_code
+          #            redirect-uri: http://localhost:9090/login/oauth2/  # Matches redirect URI in Keycloak
+          #            scope: openid, profile, email  # Include 'openid' for OIDC
+          #            provider: keycloak
+          #        provider:
+          #          keycloak:
+          #            authorization-uri: http://localhost:8080/realms/oauth-gateway/protocol/openid-connect/auth
+          #            token-uri: http://localhost:8080/realms/oauth-gateway/protocol/openid-connect/token
+          #            user-info-uri: http://localhost:8080/realms/oauth-gateway/protocol/openid-connect/userinfo
+          #            jwk-set-uri: http://localhost:8080/realms/oauth-gateway/protocol/openid-connect/certs
+          #            user-name-attribute: preferred_username  # Maps to Keycloak username
+          #      # Optional: If acting as resource server (for JWT validation on gateway endpoints)
+          ##      resourceserver:
+          ##        jwt:
+          ##          issuer-uri: http://localhost:8080/realms/demo
+          #  cloud:
+          #    gateway:
+          #      mvc:
+          #        routes:
+          #          - id: demo-customer  # Example route to a downstream service
+          #            uri: http://localhost:9091  # Downstream API URL
+          #            predicates:
+          #              - Path=/api1/**
+          #            filters:
+          #              - TokenRelay=  # Forwards the access token as Authorization: Bearer <token>
+          #          - id: downstream-api2
+          #            uri: http://localhost:9092
+          #            predicates:
+          #              - Path=/api2/**
+          #            filters:
+          #              - TokenRelay=
+          #      # Optional global defaults
+          #      default-filters:
+          #        - TokenRelay=
