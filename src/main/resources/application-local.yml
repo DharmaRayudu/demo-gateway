@@ -28,6 +28,37 @@ spring:
                 - Path=/api/customrs/**
               filters:
                 - TokenRelay
+
+# application.yml
+logging:
+  level:
+    # Spring Security
+    org.springframework.security: TRACE
+    org.springframework.security.oauth2: TRACE
+    org.springframework.security.web: DEBUG
+
+    # OAuth2 Specific
+    org.springframework.security.oauth2.client: TRACE
+    org.springframework.security.oauth2.core: DEBUG
+    org.springframework.security.oauth2.server.resource: DEBUG
+
+    # Gateway
+    org.springframework.cloud.gateway: DEBUG
+    org.springframework.cloud.gateway.route: TRACE
+    org.springframework.cloud.gateway.handler: TRACE
+
+    # Web and Session
+    org.springframework.web: DEBUG
+    org.springframework.session: DEBUG
+    org.springframework.web.session: DEBUG
+    
+    # HTTP Client
+    org.springframework.web.reactive.function.client: DEBUG
+    org.springframework.http.client: DEBUG
+
+    # Additional Security
+    org.springframework.boot.autoconfigure.security: DEBUG
+    org.springframework.security.config: DEBUG
           #spring:
           #  security:
           #    oauth2:
